@@ -51,16 +51,18 @@ exports.getSignIn = (req, res, next) => {
 };*/
 
 exports.postSignIn = async (req, res, next) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({where: {email} });
     try {
-      const { email, password } = req.body;
-      const user = await User.findOne({ email });
+      
       if (!user) {
         throw new Error('User not found');
       }
-  
+      console.log(password,user.password)
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
         throw new Error('Incorrect password');
+        //console.log('incorrect password')
       }
   
       res.status(200).json({ message: 'Sign in successful' });
