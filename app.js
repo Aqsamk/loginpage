@@ -5,11 +5,13 @@ const cors = require('cors');
 const sequelize = require('./util/database');
 const User = require('./models/User');
 const userRoutes = require('./routes/user');
+const ExpanseRoutes = require('./routes/expanse')
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use( userRoutes);
+app.use(ExpanseRoutes)
 
 sequelize.sync()
 .then((res) => {

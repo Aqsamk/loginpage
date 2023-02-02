@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <title>Add Expanse</title>
+        <style>
+            body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+    
+            background-size: cover;
+            background-position: center;
+            }
+            .expanse-form{
+                width: 300px;
+                box-shadow: 0 0 3px rgba (0, 0, 0, 0.3);
+                background: #fff;
+                padding: 20px;
+                margin: 8% auto;
+                text-align: center;
+                border-radius: 2pc;
+
+            }
+            .input-box {
+            border-radius: 20px;
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #999;
+            outline: none;
+            text-align: center;
+            }
+            .expanse-form h1{
+            color: #1c8adb;
+            margin-bottom: 30px;
+            }
+            label{
+    color: black solid;
+    font-family: sans-serif;
+    text-align: center;
+}
+            button {
+            background: blue;
+            color: #fff;
+            width: 100%;
+            padding: 10px;
+            border-radius: 20px;
+            font-size: 15px;
+            margin: 10px 0;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            }
+
+        </style>
+    </head>
+    <body style="background: linear-gradient(135deg, #F97794 10%, #623AA2 100%)">
+        <div class="expanse-form">
+        <h1>Add Expanse</h1>
+        <form  onsubmit=" saveExpanse(event)">
+            <label>Description</label><br>
+            <input class="input-box" id="discription" type="text" name="discription"  required/>
+            <label> Amount</label><br>
+            <input  class="input-box" id="amt" type="number" name="amount"  required/>
+            <label >Catagory</label><br>
+            <select  class="input-box" id="select" name="selec">
+                <option>Trip</option>
+                <option>Medicine</option>
+                <option>Pet</option>
+                <option>Ration</option>
+            </select>
+
+            <button> Add Expanse </button>
+        </form>
+        <ul id='listOfitems'></ul>
+        </div>
+        <script>
+        function saveExpanse(event) {
+            event.preventDefault();
+            const description = event.target.discription.value;
+            const money = event.target.amount.value;
+            const catagory = event.target.selec.value;
+
+        const obj = {
+            description,
+            money,
+            catagory
+        }
+
+        axios.post("http://localhost:8000/expanse/add-expanse", obj)
+        .then((response) => {
+            showList(response.data);
+            console.log(response.data);
+        }).catch(err => console.log(err))
+
+
+
+}
+
+
+function showList(expanse){
+
+                parentNode = document.getElementById('listOfitems');
+                const createNewUserHtml = `<li id='${expanse.id}'>${expanse.description} - ${expanse.money} - ${expanse.catagory}
+                                                <button onclick=deleteExp('${expanse.id}')>Delete</button>
+                                            </li>`
+                                               // <button onclick=editExpDetails('${expanse.description}','${expanse.money}','${expanse._id}')>Edit</button>
+                                            //</li>
+                                            //`
+                console.log(createNewUserHtml)
+                parentNode.innerHTML +=  createNewUserHtml;
+                console.log(parentNode.innerHTML)
+            }
+
+window.addEventListener('DOMContentLoaded', async (event) => {
+    try {
+        const response = await axios.get("http://localhost:8000/expanse/get-expanse");
+        for (var i = 0; i < response.data.allExpanse.length; i++) {
+            showList(response.data.allExpanse[i])
+        }
+        console.log(response)
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+/*async function editExpDetails(description, cost, ExpId) {
+    document.getElementById('discription').value = description;
+    document.getElementById('amt').value = cost;
+    // document.getElementById('select').value = catagory;
+    try {
+      
+    axios.put(`http://localhost:5000/expanse/edit-expanse/${ExpId}`)
+     .then((reeponse) => {
+         console.log('editing started');
+         removeItemFromScreen(UserId);
+     })
+    }
+     {catch((err) => {
+         console.log(err);
+     })}
+}*/
+
+
+async function deleteExp(ExpId) {
+    try {
+        const response = await axios.delete(`http://localhost:5000/expanse/delete-expanse/${ExpId}`);
+        removeItemFromScreen(ExpId);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function removeItemFromScreen(ExpId){
+                const parentNode = document.getElementById('listOfitems');
+                const elem = document.getElementById(ExpId)
+                parentNode.removeChild(elem);
+            }
+        </script>
+
+
+    </body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+</html>

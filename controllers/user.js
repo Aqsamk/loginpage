@@ -30,27 +30,8 @@ exports.getSignIn = (req, res, next) => {
   res.sendFile(__dirname + "/view/login-page.html");
 };
 
-/*exports.postSignIn = (req, res, next) => {
-  const { email, password } = req.body;
 
-  User.findAll({ where: { email, password } })
-    .then((user) => {
-      if (user.length > 0) {
-        if (user[0].password === password) {
-          res.status(200).json({ success: true, message: "User logged in successfully" });
-        } else {
-          return res.status(400).json({ success: false, message: "Password is incorrect" });
-        }
-      } else {
-        return res.status(404).json({ success: false, message: 'user not found' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err, success: false });
-    });
-};*/
-
-exports.postSignIn = async (req, res, next) => {
+/*exports.postSignIn = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({where: {email} });
     try {
@@ -66,14 +47,40 @@ exports.postSignIn = async (req, res, next) => {
       }
   
       res.status(200).json({ message: 'Sign in successful' });
+      
+    } catch (err) {
+      console.error(err);
+      res.status(401).json({ message: 'Sign in failed' });
+    }
+  };*/
+
+  exports.postSignIn = async (req, res, next) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({where: {email} });
+    try {
+      if (!user) {
+        throw new Error('User not found');
+      }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        throw new Error('Incorrect password');
+      }
+      // Redirect to another page after successful login
+      res.status(200).json({ message: 'Sign in successful' });
+      //res.redirect('/expanse/add-expanse');
     } catch (err) {
       console.error(err);
       res.status(401).json({ message: 'Sign in failed' });
     }
   };
   
+  
 
 exports.getUsers = async (req, res, next) => {
   const users = await User.findAll();
   res.status(200).json({ allUsers: users });
 };
+
+exports.getExpansepage = async (req,res,next) => {
+    res.sendFile(__dirname + "/view/expanses.html");
+}

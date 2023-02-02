@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <title> Sign Up Form </title>
+        
+        <style>
+            body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    
+    background-size: cover;
+    background-position: center;
+}
+
+.sign-up-form {
+    width: 300px;
+    box-shadow: 0 0 3px rgba (0, 0, 0, 0.3);
+    background: #fff;
+    padding: 20px;
+    margin: 8% auto;
+    text-align: center;
+    border-radius: 2pc;
+}
+.sign-up-form h1{
+    color: #1c8adb;
+    margin-bottom: 30px;
+}
+
+.input-box {
+    border-radius: 20px;
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    border: 1px solid #999;
+    outline: none;
+    text-align: center;
+}
+
+button {
+    background: blue;
+    color: #fff;
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 15px;
+    margin: 10px 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+a{
+    text-decoration: none;
+
+}
+hr{
+    margin-top: 20px;
+    width: 80%;
+}
+.or{
+    background-color: #fff;
+    width: 30px;
+    margin: -19px auto 10px;
+}
+
+
+
+label{
+    color: black solid;
+    font-family: sans-serif;
+}
+
+ul{
+    text-align: center;
+    width: 100%;
+    margin-bottom: 2px;
+    font-family: sans-serif;
+    color: red;
+}
+        </style>
+    </head>
+    <body >
+
+        <div class="sign-up-form">
+           
+            <h1>Sign Up now</h1>
+            <form  onsubmit="saveToBackendStorage(event) " method="post">
+                <label>Name  </label>
+                <input type="text" id="username" class="input-box" placeholder="Your name" name="username" required><br>
+                <label>Email  </label>
+                <input type="email" id="email" class="input-box" placeholder="Your email" name="emailId" required><br>
+                <label>Password  </label>
+                <input type="password" id="password" class="input-box" placeholder="Your Password" name="passcode" required><br>
+                <button type="submit" class="signup-btn" id="btn">Sign up</button>
+                <hr>
+                <p class="or">OR</p>
+                <p>Do you already have an acount ? <a href="http://localhost:8000/user/sign-in">Sign in</a></p>
+            </form>
+            <ul id="list"></ul>
+        </div>
+        
+        
+        <script>
+            function saveToBackendStorage(event) {
+                event.preventDefault();
+                const name = event.target.username.value;
+                const email = event.target.emailId.value;
+                const password = event.target.passcode.value;
+                // localStorage.setItem('name', name);
+                // localStorage.setItem('email', email);
+                // localStorage.setItem('phonenumber', phonenumber)
+                const obj = {
+                    name,
+                    email,
+                    password
+                }
+                axios.post("http://localhost:8000/user/sign-up",obj)
+                .then((response) => {
+                    showListofRegisteredUser(response.data);
+                    console.log(response);
+                    
+                })
+                .catch((err) => {
+                    document.body.innerHTML = document.body.innerHTML + "<h4>something went wrong</h4>"
+                    console.log(err)})
+                //localStorage.setItem(obj.email, JSON.stringify(obj))
+                //showListofRegisteredUser(obj)
+            }
+
+            window.addEventListener('DOMContentLoaded', (event) => {
+                axios.get("http://localhost:8000/user/get-users")
+                .then((response) => {
+                    for(var i = 0;i<response.data.allUsers.length;i++){
+                        showListofRegisteredUser(response.data.allUsers[i])
+                    }
+                    console.log(response)
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+                
+                //Object.keys(localStorage).forEach(key => {
+                 //   const user = JSON.parse(localStorage.getItem(key))
+                 //   showListofRegisteredUser(user)
+                //})
+            })
+
+            function showListofRegisteredUser(user){
+                
+                parentNode = document.getElementById('list');
+                const createNewUserHtml = `<li id='${user.id}'>${user.name} - ${user.email}
+                                                
+                                                </li>`
+                                               // <button onclick=editUserDetails('${user.email}','${user.name}','${user.phonenumber}','${user.id}')>Edit</button>
+                                           // </li>
+                                            
+                console.log(createNewUserHtml)
+                parentNode.innerHTML +=  createNewUserHtml;
+                console.log(parentNode.innerHTML)
+            }
+
+          
+            
+          
+        </script>
+
+
+    </body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+</html>
