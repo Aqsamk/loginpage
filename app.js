@@ -6,6 +6,8 @@ const sequelize = require('./util/database');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 
+const jwt =  require('jsonwebtoken')
+
 
 
 app.use(cors());
@@ -71,19 +73,52 @@ app.get('/user/get-users', async (req,res,next) => {
 
 //For sign in
 
-app.post("/user/sign-in", async (req, res) => {
+/*app.post('/user/sign-in', (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.send("User not found");
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.send("Invalid password");
-    }
-    req.session.user = user;
-    res.redirect("/dashboard");
-  });
+  
+    User.findOne({
+      where: {
+        email,
+        password
+      }
+    })
+      .then(user => {
+        if (!user) {
+          return res.status(404).send({ message: 'User not found' });
+        }
+       
+  
+        res.status(200).send({ message: 'successfully logged in ' });
+      })
+      .catch(error => {
+        res.status(400).send({ message: document.body.innerHTML += `<div style="color:red;" >user not found </div>` });
+      });
+  });*/
+
+  app.post('/user/signin',  (req, res) => {
+    const { email, password } = req.body;
+    console.log(password)
+
+    User.findAll({where : {email,password}}).then(user => {
+        if(user.length>0){
+            if(user[0].password === password){
+                res.status(200).json({success:true, message:"User logged in successfully"})
+            }
+            else{
+                return res.status(400).json({success:false,message: "Password is incorrect"})
+            }
+        }else{
+            return res.status(404).json({success:false,message:'user not found'})
+        }
+    }).catch(err => {
+        res.status(500).json({message:err,success:false})
+    })
+
+});
+     
+
+
+  
 
 sequelize.sync()
 .then((res) => {

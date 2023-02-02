@@ -7,7 +7,7 @@
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-    background-image: url(background.jpg);
+    
     background-size: cover;
     background-position: center;
 }
@@ -62,11 +62,6 @@ hr{
     margin: -19px auto 10px;
 }
 
-img{
-    border-radius: 90%;
-    width: 90px;
-    margin-top: -50px;
-}
 
 label{
     color: black solid;
@@ -85,7 +80,7 @@ ul{
     <body >
 
         <div class="sign-up-form">
-            <img src="user.png">
+           
             <h1>Sign-In</h1>
             <form  onsubmit="LogIn(event) " method="post">
                 
@@ -119,13 +114,10 @@ ul{
                     if(response.status === 200){
                         alert(response.data.message)
                     }
-                    else {
-                        throw new Error(response.data.message)
-                    }
                 })
                 .catch((err) => {
                   console.log(JSON.stringify(err))
-                  document.body.innerHTML += `<div style="color:red;" > ${err.message}</div>`
+                  document.body.innerHTML += `<div style="color:red;" >${err.message}</div>`
                 })
             }
 
