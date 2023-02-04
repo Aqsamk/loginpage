@@ -1,8 +1,5 @@
-const Expanse = require('../models/expanse');
+/*const Expanse = require('../models/expanse');
 
-//exports.getAddExpanse = (req, res, next) => {
- //   res.sendFile(__dirname + "/view/form.html")
-//}
 
 exports.postAddExpanse = async (req, res, next) => {
     const description = req.body.description;
@@ -21,4 +18,4 @@ exports.deleteExpanse = async (req, res, next) => {
     const eId = req.params.id;
     await Expanse.destroy({where:{id:eId}})
     res.sendStatus(200);
-}
+}*/

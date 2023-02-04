@@ -56,7 +56,7 @@
     <body style="background: linear-gradient(135deg, #F97794 10%, #623AA2 100%)">
         <div class="expanse-form">
         <h1>Add Expanse</h1>
-        <form  onsubmit=" saveExpanse(event)">
+        <form  onsubmit=" saveExpanse(event)" method="post">
             <label>Description</label><br>
             <input class="input-box" id="discription" type="text" name="discription"  required/>
             <label> Amount</label><br>
@@ -95,21 +95,19 @@
 
 
 }
-
-
 function showList(expanse){
 
-                parentNode = document.getElementById('listOfitems');
-                const createNewUserHtml = `<li id='${expanse.id}'>${expanse.description} - ${expanse.money} - ${expanse.catagory}
-                                                <button onclick=deleteExp('${expanse.id}')>Delete</button>
-                                            </li>`
-                                               // <button onclick=editExpDetails('${expanse.description}','${expanse.money}','${expanse._id}')>Edit</button>
-                                            //</li>
-                                            //`
+    parentNode = document.getElementById('listOfitems');
+        const createNewUserHtml = `<li id='${expanse.id}'>${expanse.description} - ${expanse.money} - ${expanse.catagory}
+                 <button onclick=deleteExp('${expanse.id}')>Delete</button>
+                    
+                                                <button onclick=editExpDetails('${expanse.description}','${expanse.money}','${expanse._id}')>Edit</button>
+                                            </li>
+                                            `
                 console.log(createNewUserHtml)
                 parentNode.innerHTML +=  createNewUserHtml;
                 console.log(parentNode.innerHTML)
-            }
+}
 
 window.addEventListener('DOMContentLoaded', async (event) => {
     try {
@@ -143,7 +141,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
 async function deleteExp(ExpId) {
     try {
-        const response = await axios.delete(`http://localhost:5000/expanse/delete-expanse/${ExpId}`);
+        const response = await axios.delete(`http://localhost:8000/expanse/delete-expanse/${ExpId}`);
         removeItemFromScreen(ExpId);
     } catch (err) {
         console.log(err);
