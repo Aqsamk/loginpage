@@ -1,6 +1,11 @@
 const User = require('../models/User');
 const Expanse = require('../models/expanse');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken')
+
+function generateAccessToken(id){
+  return jwt.sign({userId:id},'sbvekgurdnvi353t5guvjevn5')
+}
 
 exports.getSignUp = (req, res, next) => {
   res.sendFile(__dirname +'/view/form.html');
@@ -46,7 +51,7 @@ exports.getSignIn = (req, res, next) => {
         throw new Error('Incorrect password');
       }
       // Redirect to another page after successful login
-      res.status(200).json({ message: 'Sign in successful' });
+      res.status(200).json({ message: 'Sign in successful' ,token:generateAccessToken(user.id)});
       //res.redirect('/expanse/add-expanse');
     } catch (err) {
       console.error(err);
@@ -71,11 +76,13 @@ exports.postAddExpanse = async (req, res, next) => {
   const money = req.body.money;
   const catagory = req.body.catagory;
   const data = await Expanse.create({description:description,money:money,catagory:catagory})
+  
   res.status(201).json({newExpDetail:data});
 }
 
 exports.getExpanse = async (req, res, next) => {
-  const expanses = await Expanse.findAll();
+  const expanses = await Expanse.findAll({where:{SignUpFormId:req.user.id}}
+    );
   res.status(200).json({allExpanse:expanses})
 }
 

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const sequelize = require('./util/database');
 const User = require('./models/User');
+const Expanse = require('./models/expanse')
 const userRoutes = require('./routes/user');
 //const ExpanseRoutes = require('./routes/expanse')
 
@@ -11,7 +12,9 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use( userRoutes);
-//app.use('/expanse/get-expanse',ExpanseRoutes)
+
+User.hasMany(Expanse);
+Expanse.belongsTo(User);
 
 sequelize.sync()
 .then((res) => {

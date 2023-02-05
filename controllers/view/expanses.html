@@ -37,8 +37,12 @@
     color: black solid;
     font-family: sans-serif;
     text-align: center;
+
 }
-            button {
+button{
+    cursor: pointer;
+}
+             .btn {
             background: blue;
             color: #fff;
             width: 100%;
@@ -69,7 +73,7 @@
                 <option>Ration</option>
             </select>
 
-            <button> Add Expanse </button>
+            <button class="btn"> Add Expanse </button>
         </form>
         <ul id='listOfitems'></ul>
         </div>
@@ -99,7 +103,7 @@ function showList(expanse){
 
     parentNode = document.getElementById('listOfitems');
         const createNewUserHtml = `<li id='${expanse.id}'>${expanse.description} - ${expanse.money} - ${expanse.catagory}
-                 <button onclick=deleteExp('${expanse.id}')>Delete</button>
+                 <button  onclick=deleteExp('${expanse.id}')>Delete</button>
                     
                                                 <button onclick=editExpDetails('${expanse.description}','${expanse.money}','${expanse._id}')>Edit</button>
                                             </li>
@@ -111,7 +115,8 @@ function showList(expanse){
 
 window.addEventListener('DOMContentLoaded', async (event) => {
     try {
-        const response = await axios.get("http://localhost:8000/expanse/get-expanse");
+        const token = localStorage.getItem('token')
+        const response = await axios.get("http://localhost:8000/expanse/get-expanse",{headers:{"Authorization":token}});
         for (var i = 0; i < response.data.allExpanse.length; i++) {
             showList(response.data.allExpanse[i])
         }

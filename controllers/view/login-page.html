@@ -112,6 +112,7 @@ ul{
                 axios.post("http://localhost:8000/user/sign-in",obj)
                 .then((response) => {
                     alert(response.data.message)
+                    localStorage.setItem('token',response.data.token)
                     window.location.href = "/expanse/add-expanse"
                     console.log('Loggedin')
                 })
