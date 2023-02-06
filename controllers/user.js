@@ -75,20 +75,30 @@ exports.postAddExpanse = async (req, res, next) => {
   const description = req.body.description;
   const money = req.body.money;
   const catagory = req.body.catagory;
-  const data = await Expanse.create({description:description,money:money,catagory:catagory})
+  const data = await Expanse.create({description:description,money:money,catagory:catagory,SignUpFormId:req.user.id})
   
   res.status(201).json({newExpDetail:data});
 }
 
 exports.getExpanse = async (req, res, next) => {
-  const expanses = await Expanse.findAll({where:{SignUpFormId:req.user.id}}
-    );
+ // const expanse = await Expanse.findAll();
+  const expanses = await Expanse.findAll({where:{SignUpFormId:req.user.id}});
+  //req.user.getExpanse();
+
   res.status(200).json({allExpanse:expanses})
 }
 
 exports.deleteExpanse = async (req, res, next) => {
   const eId = req.params.id;
+ // const UserIdent = req.user.id
   await Expanse.destroy({where:{id:eId}})
-  res.sendStatus(200);
+// console.log(UserIdent);
+ // .then((noofrows) => {
+ //   if(noofrows === 0){
+  //    return res.status(404).json({success:false,message:"Expense doesn't belong to the user"})
+  //  }
+    return res.sendStatus(200);
+ // })
+  
 }
 

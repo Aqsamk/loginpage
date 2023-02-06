@@ -15,7 +15,7 @@ router.get('/expanse/add-expanse',userController.getExpansepage)//also middlware
 
 //expanse routes to get details
 
-router.post('/expanse/add-expanse',expanseController.postAddExpanse)
+router.post('/expanse/add-expanse',userauthentication.authenticate,expanseController.postAddExpanse)
 router.get('/expanse/get-expanse',userauthentication.authenticate,expanseController.getExpanse)//will add middleware here
 router.delete('/expanse/delete-expanse/:id',expanseController.deleteExpanse)
 

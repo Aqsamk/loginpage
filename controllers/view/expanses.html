@@ -69,6 +69,7 @@ button{
             <select  class="input-box" id="select" name="selec">
                 <option>Trip</option>
                 <option>Medicine</option>
+                <option>Dinner</option>
                 <option>Pet</option>
                 <option>Ration</option>
             </select>
@@ -89,9 +90,10 @@ button{
             money,
             catagory
         }
-
-        axios.post("http://localhost:8000/expanse/add-expanse", obj)
+        const token = localStorage.getItem('token')
+        axios.post("http://localhost:8000/expanse/add-expanse", obj,{headers:{"Authorization" : token}})
         .then((response) => {
+           
             showList(response.data);
             console.log(response.data);
         }).catch(err => console.log(err))
@@ -146,7 +148,8 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
 async function deleteExp(ExpId) {
     try {
-        const response = await axios.delete(`http://localhost:8000/expanse/delete-expanse/${ExpId}`);
+        const token = localStorage.getItem('token')
+        const response = await axios.delete(`http://localhost:8000/expanse/delete-expanse/${ExpId}`,{headers:{"Authorization":token}});
         removeItemFromScreen(ExpId);
     } catch (err) {
         console.log(err);

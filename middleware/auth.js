@@ -1,13 +1,16 @@
-/*const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const dotenv = require('dotenv');
 //const { use } = require('../routes/user');
+
+dotenv.config();
 
 const authenticate = (req,res,next) => {
 
     try{
         const token = req.header('Authorization');
         console.log(token);
-        const user = jwt.verify(token,'sbvekgurdnvi353t5guvjevn5'/*,process.env.TOKEN_SECRET);
+        const user = jwt.verify(token,'sbvekgurdnvi353t5guvjevn5',process.env.TOKEN_SECRET);
         console.log('userId >>>>',user.userId)
         User.findByPk(user.userId).then(user => {
             console.log(JSON.stringify(user));
@@ -22,11 +25,11 @@ const authenticate = (req,res,next) => {
 
 }
 
-module.exports = {authenticate};*/
+module.exports = {authenticate};
 
 
 
-const jwt = require('jsonwebtoken');
+/*const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const dotenv = require('dotenv');
 
@@ -59,3 +62,4 @@ exports.authorization=async(req, res, next)=>{
     }
   
 }
+*/
