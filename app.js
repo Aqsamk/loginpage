@@ -6,6 +6,7 @@ const sequelize = require('./util/database');
 const User = require('./models/User');
 const Expanse = require('./models/expanse')
 const userRoutes = require('./routes/user');
+const Order = require('./models/orders');
 //const ExpanseRoutes = require('./routes/expanse')
 
 app.use(cors());
@@ -15,6 +16,9 @@ app.use( userRoutes);
 
 User.hasMany(Expanse);
 Expanse.belongsTo(User);
+
+User.hasMany(Order);
+Order.belongsTo(User);
 
 sequelize.sync()
 .then((res) => {

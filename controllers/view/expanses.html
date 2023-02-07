@@ -54,12 +54,25 @@ button{
             outline: none;
             cursor: pointer;
             }
+            .btn-floating-right-corner{
+                color: #fff;
+                position: absolute ;
+                top : 120;
+                right : 580;
+                width: 7%;
+                padding: 5px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-family: sans-serif;
+                background-color: green;
+
+            }
 
         </style>
     </head>
     <body style="background: linear-gradient(135deg, #F97794 10%, #623AA2 100%)">
         <div class="expanse-form">
-        <h1>Add Expanse</h1>
+        <h1>Add Expense</h1>
         <form  onsubmit=" saveExpanse(event)" method="post">
             <label>Description</label><br>
             <input class="input-box" id="discription" type="text" name="discription"  required/>
@@ -74,38 +87,36 @@ button{
                 <option>Ration</option>
             </select>
 
-            <button class="btn"> Add Expanse </button>
+            <button class="btn"> Add Expense </button>
+            <button id="rzp-button1" class="btn-floating-right-corner">Buy Premium membership</button>
         </form>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
         <ul id='listOfitems'></ul>
         </div>
         <script>
-        function saveExpanse(event) {
-            event.preventDefault();
-            const description = event.target.discription.value;
-            const money = event.target.amount.value;
-            const catagory = event.target.selec.value;
+            function saveExpanse(event) {
+                event.preventDefault();
+                const description = event.target.discription.value;
+                const money = event.target.amount.value;
+                const catagory = event.target.selec.value;
 
-        const obj = {
-            description,
-            money,
-            catagory
-        }
-        const token = localStorage.getItem('token')
-        axios.post("http://localhost:8000/expanse/add-expanse", obj,{headers:{"Authorization" : token}})
-        .then((response) => {
-           
-            showList(response.data);
-            console.log(response.data);
-        }).catch(err => console.log(err))
-
-
-
-}
-function showList(expanse){
-
-    parentNode = document.getElementById('listOfitems');
-        const createNewUserHtml = `<li id='${expanse.id}'>${expanse.description} - ${expanse.money} - ${expanse.catagory}
-                 <button  onclick=deleteExp('${expanse.id}')>Delete</button>
+                const obj = {
+                 description,
+                 money,
+                 catagory
+                }
+                const token = localStorage.getItem('token')
+                axios.post("http://localhost:8000/expanse/add-expanse", obj,{headers:{"Authorization" : token}})
+                .then((response) => {
+                    showList(response.data);
+                    console.log(response.data);
+                }).catch(err => console.log(err))
+            }
+            function showList(expanse){
+                parentNode = document.getElementById('listOfitems');
+                const createNewUserHtml = `<li id='${expanse.id}'>${expanse.description} - ${expanse.money} - ${expanse.catagory}
+                <button  onclick=deleteExp('${expanse.id}')>Delete</button>
                     
                                                 <button onclick=editExpDetails('${expanse.description}','${expanse.money}','${expanse._id}')>Edit</button>
                                             </li>
@@ -113,56 +124,73 @@ function showList(expanse){
                 console.log(createNewUserHtml)
                 parentNode.innerHTML +=  createNewUserHtml;
                 console.log(parentNode.innerHTML)
-}
+            }
 
-window.addEventListener('DOMContentLoaded', async (event) => {
-    try {
-        const token = localStorage.getItem('token')
-        const response = await axios.get("http://localhost:8000/expanse/get-expanse",{headers:{"Authorization":token}});
-        for (var i = 0; i < response.data.allExpanse.length; i++) {
-            showList(response.data.allExpanse[i])
-        }
-        console.log(response)
-    } catch (err) {
-        console.log(err);
-    }
-});
-
-/*async function editExpDetails(description, cost, ExpId) {
-    document.getElementById('discription').value = description;
-    document.getElementById('amt').value = cost;
-    // document.getElementById('select').value = catagory;
-    try {
-      
-    axios.put(`http://localhost:5000/expanse/edit-expanse/${ExpId}`)
-     .then((reeponse) => {
-         console.log('editing started');
-         removeItemFromScreen(UserId);
-     })
-    }
-     {catch((err) => {
-         console.log(err);
-     })}
-}*/
+            window.addEventListener('DOMContentLoaded', async (event) => {
+                try {
+                    const token = localStorage.getItem('token')
+                    const response = await axios.get("http://localhost:8000/expanse/get-expanse",{headers:{"Authorization":token}});
+                    for (var i = 0; i < response.data.allExpanse.length; i++) {
+                     showList(response.data.allExpanse[i])
+                    }
+                    console.log(response)
+                } catch (err) {
+                console.log(err);
+                }
+            });
 
 
-async function deleteExp(ExpId) {
-    try {
-        const token = localStorage.getItem('token')
-        const response = await axios.delete(`http://localhost:8000/expanse/delete-expanse/${ExpId}`,{headers:{"Authorization":token}});
-        removeItemFromScreen(ExpId);
-    } catch (err) {
-        console.log(err);
-    }
-}
 
-function removeItemFromScreen(ExpId){
+
+            async function deleteExp(ExpId) {
+                try {
+                 const token = localStorage.getItem('token')
+                const response = await axios.delete(`http://localhost:8000/expanse/delete-expanse/${ExpId}`,{headers:{"Authorization":token}});
+                removeItemFromScreen(ExpId);
+                } catch (err) {
+                console.log(err);
+                }
+            }
+
+            function removeItemFromScreen(ExpId){
                 const parentNode = document.getElementById('listOfitems');
                 const elem = document.getElementById(ExpId)
                 parentNode.removeChild(elem);
             }
-        </script>
 
+            document.getElementById("rzp-button1").onclick = async function (e) {
+            const token = localStorage.getItem("token");
+            const response = await axios.get(
+                "http://localhost:8000/purchase/premiummembership",
+                { headers: { Authorization: token } }
+            );
+            console.log(response);
+            var options = {
+            key: response.data.key_id,
+            order_id: response.data.order.id,
+            handler: async function (response) {
+            await axios.post(
+            "http://localhost:8000/purchase/updatetransactionstatus",
+            {
+                order_id: options.order_id,
+                payment_id: response.razorpay_payment_id,
+            },
+            { headers: { Authorization: token } }
+        );
+
+        alert("You are a premium user now");
+    },
+  };
+  const rzp1 = new Razorpay(options);
+  rzp1.open();
+  e.preventDefault();
+
+  rzp1.on("payment.failed", function (response) {
+    console.log(response);
+    alert("Something went wrong");
+  });
+};
+        </script>
 
     </body>
 
