@@ -7,12 +7,14 @@ const User = require('./models/User');
 const Expanse = require('./models/expanse')
 const userRoutes = require('./routes/user');
 const Order = require('./models/orders');
+const premiumFeatureRoutes = require("./routes/premiumfeature");
 //const ExpanseRoutes = require('./routes/expanse')
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use( userRoutes);
+app.use("/premium", premiumFeatureRoutes);
 
 User.hasMany(Expanse);
 Expanse.belongsTo(User);

@@ -17,6 +17,10 @@ const User = sequelize.define('Sign-up-form', {
     password:{
         type: Sequelize.STRING,
         unique: true
+    },
+    ispremiumuser:{
+        type:Sequelize.BOOLEAN,
+        default:false
     }
 })
 

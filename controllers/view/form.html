@@ -111,7 +111,8 @@ ul{
                 const obj = {
                     name,
                     email,
-                    password
+                    password,
+                    
                 }
                 axios.post("http://localhost:8000/user/sign-up",obj)
                 .then((response) => {

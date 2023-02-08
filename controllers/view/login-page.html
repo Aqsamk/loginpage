@@ -114,7 +114,7 @@ ul{
                     alert(response.data.message)
                     localStorage.setItem('token',response.data.token)
                     window.location.href = "/expanse/add-expanse"
-                    console.log('Loggedin')
+                    console.log(response.data)
                 })
                 .catch((err) => {
                   console.log(JSON.stringify(err))

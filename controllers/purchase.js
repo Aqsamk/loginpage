@@ -1,11 +1,17 @@
 const Razorpay = require('razorpay');
 const Order = require('../models/orders');
-
+const userController = require('./user')
+const jwt = require('jsonwebtoken')
 
 
 /*exports.getpaymentpage = (req, res, next) => {
     res.sendFile(__dirname +'/view/expanse.html');
   };*/
+ function newtoken(id,premiumuser,name){
+    jwt.sign({id:id,premiumuser:premiumuser,name:name}, "secretkey")
+ }
+  
+  
 
 const purcahsepremium = async(req,res) => {
     try {
@@ -44,7 +50,7 @@ const UpdateTransactionStatus = async(req,res) => {
             
                 
         Promise.all([promise1,prmoise2]).then(() => {
-            return res.status(202).json({success:true,message:"Transaction Successful"});
+            return res.status(202).json({success:true,message:"Transaction Successful",token: newtoken(undefined,true)});
         }).catch((err) => {throw new Error(err)})
     }
     catch(err){

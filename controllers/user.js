@@ -3,9 +3,14 @@ const Expanse = require('../models/expanse');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 
-function generateAccessToken(id){
-  return jwt.sign({userId:id},'sbvekgurdnvi353t5guvjevn5')
-}
+/*unction generateAccessTokenHere(id,name,ispremiumuser){
+  return jwt.sign({userId:id,name:name,premium:ispremiumuser},'secretkey')
+}*/
+
+  const generateAccessToken = (id, name,ispremiumuser ) => {
+  return jwt.sign({ userId: id, name: name,ispremiumuser:ispremiumuser}, "secretkey");
+};
+
 
 exports.getSignUp = (req, res, next) => {
   res.sendFile(__dirname +'/view/form.html');
@@ -20,9 +25,10 @@ exports.postSignUp = async (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    //const ispremiumuser = req.body.ispremiumuser;
     const saltround = 10;
     bcrypt.hash(password,saltround,async(err,hash) =>{
-        const data = await User.create({ name, email,  password : hash });
+        const data = await User.create({ name, email,  password : hash, });
         res.status(201).json({ newUserDetail: data });
     })
     
@@ -51,7 +57,14 @@ exports.getSignIn = (req, res, next) => {
         throw new Error('Incorrect password');
       }
       // Redirect to another page after successful login
-      res.status(200).json({ message: 'Sign in successful' ,token:generateAccessToken(user.id)});
+      res.status(200).json({ message: 'Sign in successful' ,
+      //token: generateAccessToken(user.id, user.name),
+            token: generateAccessToken(
+              user.id,
+              user.name,
+              user.ispremiumuser
+            ),
+    });
       //res.redirect('/expanse/add-expanse');
     } catch (err) {
       console.error(err);
@@ -101,4 +114,6 @@ exports.deleteExpanse = async (req, res, next) => {
  // })
   
 }
+
+//module.exports ={ generateAccessToken,postSignIn};
 
