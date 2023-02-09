@@ -17,7 +17,8 @@ const Expanse = sequelize.define('expanse', {
     catagory:{
         type: Sequelize.STRING
 
-    }
+    },
+    
 })
 
 module.exports = Expanse;
