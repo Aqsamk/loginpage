@@ -11,11 +11,11 @@ const getUserLeaderBoard = async (req, res) => {
     const expenses = await Expense.findAll();
     const userAggregatedExpenses = {};
     expenses.forEach((expense) => {
-      if (userAggregatedExpenses[expense.userId]) {
-        userAggregatedExpenses[expense.userId] =
-          userAggregatedExpenses[expense.userId] + expense.expenseamount;
+      if (userAggregatedExpenses[expense.SingUpFormId]) {
+        userAggregatedExpenses[expense.SignUpFormId] =
+          userAggregatedExpenses[expense.SignUpFormId] + expense.money;
       } else {
-        userAggregatedExpenses[expense.userId] = expense.expenseamount;
+        userAggregatedExpenses[expense.SignUpFormId] = expense.money;
       }
     });
     var userLeaderBoardDetails = [];
