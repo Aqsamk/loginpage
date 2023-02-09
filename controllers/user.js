@@ -42,6 +42,12 @@ exports.getSignIn = (req, res, next) => {
   res.sendFile(__dirname + "/view/login-page.html");
 };
 
+//forgot password page
+
+exports.getforgotPage = (req,res,next) => {
+  res.sendFile(__dirname+"/view/forgotpassword.html")
+}
+
 
 
 
