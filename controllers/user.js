@@ -97,8 +97,24 @@ exports.postAddExpanse = async (req, res, next) => {
   const data = await Expanse.create({description:description,money:money,catagory:catagory,SignUpFormId:req.user.id})
   
   res.status(201).json({newExpDetail:data});
-}
 
+
+  Expanse.create({money,description,catagory,userId:req.user.id}).then(expense => {
+    const totalExenses = Number(req.user.totalExenses) + Number(money)
+    console.log(totalExenses)
+    User.update({
+      totalExenses:totalExenses
+    },{
+      where:{id:req.user.id}
+    }).then(async()=>{
+      res.status(200).json({expense:expense})
+    }).catch(async(err) => {
+      return res.status(500).json({success:false,error:err})
+    })
+  }).catch(async(err) => {
+    return res.status(500).json({success:false,error:err})
+  })
+}
 exports.getExpanse = async (req, res, next) => {
  // const expanse = await Expanse.findAll();
   const expanses = await Expanse.findAll({where:{SignUpFormId:req.user.id}});

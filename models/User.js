@@ -21,6 +21,10 @@ const User = sequelize.define('Sign-up-form', {
     ispremiumuser:{
         type:Sequelize.BOOLEAN,
         default:false
+    },
+    totalExenses:{
+        type: Sequelize.INTEGER,
+        defaultValue : 0,
     }
 })
 
