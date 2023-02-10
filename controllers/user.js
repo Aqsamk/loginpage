@@ -100,10 +100,10 @@ exports.postAddExpanse = async (req, res, next) => {
 
 
   Expanse.create({money,description,catagory,userId:req.user.id}).then(expense => {
-    const totalExenses = Number(req.user.totalExenses) + Number(money)
-    console.log(totalExenses)
+    const totalExpenses = Number(req.user.totalExpenses) + Number(money)
+    console.log(totalExpenses)
     User.update({
-      totalExenses:totalExenses
+      totalExpenses:totalExpenses
     },{
       where:{id:req.user.id}
     }).then(async()=>{

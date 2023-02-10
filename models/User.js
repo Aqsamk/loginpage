@@ -22,7 +22,7 @@ const User = sequelize.define('Sign-up-form', {
         type:Sequelize.BOOLEAN,
         default:false
     },
-    totalExenses:{
+    totalExpenses:{
         type: Sequelize.INTEGER,
         defaultValue : 0,
     }

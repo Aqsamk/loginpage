@@ -46,13 +46,13 @@
 
 
 const Expense = require("../models/expanse");
-const Leaderboard = require("../models/leaderboard");
+const Leaderboard = require("../models/User");
 
 
 
 exports.leaderboard=async (req, res)=>{
 
-let a= await Leaderboard.findAll({order:[['totalExpense','DESC']]})
+let a= await Leaderboard.findAll({order:[['totalExpenses','DESC']]})
 console.log(a);
 res.json(a);
 
